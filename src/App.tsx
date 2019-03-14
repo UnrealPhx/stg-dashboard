@@ -1,28 +1,22 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import useSTGWebSocket from './utils/useSTGWebSocket';
 import './App.css';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    );
-  }
-}
+const App = () => {
+  const [{isOpen, payload, url}] = useSTGWebSocket('ws://127.0.0.1:7379');
+
+  console.log(payload);
+
+  return (
+    <div className="App">
+      <header className="App-header">
+        <p>
+          {!isOpen ? "Loading..." : `Connected to ${url}`}
+        </p>
+        <button disabled={!isOpen}>Spawn Asteroid</button>
+      </header>
+    </div>
+  );
+};
 
 export default App;
