@@ -7,7 +7,7 @@ type Action = {
 
 type State = {
   isOpen: boolean,
-  url: string,
+  ws?: WebSocket,
   payload: any
 };
 
@@ -19,7 +19,6 @@ const ACTIONS = {
 
 const initialState: State = {
   isOpen: false,
-  url: '',
   payload: null
 };
 
@@ -39,7 +38,7 @@ const parseWsData = (data: string) => {
 const reducer = (prevState: State, action: Action) => {
   switch (action.type) {
     case ACTIONS.INIT:
-      return {...prevState, isOpen: true, url: action.data};
+      return {...prevState, isOpen: true, ws: action.data};
 
     case ACTIONS.UPDATE:
       return {...prevState, payload: parseWsData(action.data)};
@@ -58,7 +57,7 @@ export default function useSTGWebSocket(url: string) {
   useEffect(() => {
     const ws = new WebSocket(url);
 
-    ws.onopen = () => dispatch({type: ACTIONS.INIT, data: url});
+    ws.onopen = () => dispatch({type: ACTIONS.INIT, data: ws});
     ws.onmessage = ev => dispatch({type: ACTIONS.UPDATE, data: ev.data});
 
     return () => {
